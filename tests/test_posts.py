@@ -1,7 +1,7 @@
 import pytest
 from app import schemas
 
-
+# GET posts tests
 def test_get_all_posts(authorized_client, test_posts):
     res = authorized_client.get("/posts/")
     def validate(post):
@@ -34,6 +34,7 @@ def test_get_one_post(authorized_client, test_posts):
     assert post.Post.content == test_posts[0].content
     assert post.Post.title == test_posts[0].title
 
+#CREATE posts tests
 @pytest.mark.parametrize("title, content, published", [
     ("test new title", "test new content", True),
     ("newyork new title", "newyork new content", True),
@@ -62,3 +63,20 @@ def test_create_post_default_published_true(authorized_client, test_user, test_p
 def test_unauthorized_user_create_post(client, test_posts, test_user):
     res = client.post("/posts/", json = {"title": "arbitary title", "content": "test content"})
     assert res.status_code == 401
+
+#DELETE posts test
+def test_unauthorized_user_delete_post(client, test_posts, test_user):
+    res = client.delete(f"/posts/{test_posts[0].id}")
+    assert res.status_code == 401
+
+def test_delete_post_success(authorized_client, test_user, test_posts):
+    res = authorized_client.delete(f"/posts/{test_posts[0].id}")
+    assert res.status_code == 204
+
+def test_delete_non_existing_post(authorized_client, test_user, test_posts):
+    res = authorized_client.delete(f"/posts/90090908980909809099809809809009")
+    assert res.status_code == 404
+
+def test_delete_other_user_post(authorized_client, test_user, test_posts):
+    res = authorized_client.delete(f"/posts/{test_posts[3].id}")
+    assert res.status_code == 403
