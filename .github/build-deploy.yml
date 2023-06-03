@@ -1,0 +1,13 @@
+name: Continuous Integration and Continuous Delivery code - CI/CD flow
+
+on: [push, pull_request] 
+# push:
+#   branches:["main", "every branch I want"]
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: pulling git repo
+        uses: actions/checkout@v3
+      - name: some simple test step
+        run: echo "helo test echo" 
