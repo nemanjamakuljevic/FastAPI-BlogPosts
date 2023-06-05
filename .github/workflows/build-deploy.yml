@@ -5,6 +5,9 @@ on: [push, pull_request]
 #   branches:["main", "every branch I want"]
 jobs:
   job1:
+    env:
+      DATABASE_HOSTNAME: localhost
+      #and the rest of env 
     runs-on: ubuntu-latest
     steps:
       - name: pulling git repo
